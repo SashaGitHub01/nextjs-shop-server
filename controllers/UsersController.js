@@ -15,7 +15,8 @@ class UsersController {
 
          if (!errors.isEmpty()) {
             return res.status(400).json({
-               error: errors
+               error: errors,
+               data: null
             })
          }
 
@@ -46,7 +47,8 @@ class UsersController {
 
       } catch (err) {
          return res.status(500).json({
-            error: err
+            error: err,
+            data: null
          })
       }
    }
@@ -70,13 +72,16 @@ class UsersController {
             req.session.token = token;
          }
 
+         delete user.password;
+
          return res.json({
             data: user
          })
 
       } catch (err) {
          return res.status(500).json({
-            error: err
+            error: err,
+            data: null
          })
       }
    }
@@ -92,13 +97,16 @@ class UsersController {
 
          if (!user) return res.status(404).send();
 
+         delete user.password;
+
          return res.json({
             data: user
          })
 
       } catch (err) {
          return res.status(500).json({
-            error: err
+            error: err,
+            data: null
          })
       }
    }
@@ -108,7 +116,8 @@ class UsersController {
 
       } catch (err) {
          return res.status(500).json({
-            error: err
+            error: err,
+            data: null
          })
       }
    }
