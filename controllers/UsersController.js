@@ -72,10 +72,11 @@ class UsersController {
             req.session.token = token;
          }
 
-         delete user.password;
+         const jsonUser = user.toJSON();
+         delete jsonUser.password;
 
          return res.json({
-            data: user
+            data: jsonUser
          })
 
       } catch (err) {
@@ -93,7 +94,11 @@ class UsersController {
          if (!token) return res.status(401).send();
 
          const { id } = jwt.decode(token);
-         const user = await User.findOne({ where: { id }, include: Cart });
+         const user = await User.findOne({
+            where: { id },
+            include: Cart,
+            attributes: { exclude: 'password' }
+         });
 
          if (!user) return res.status(404).send();
 

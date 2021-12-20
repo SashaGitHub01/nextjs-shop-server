@@ -1,5 +1,4 @@
 import express from "express";
-import { sequelize } from "../db.js";
 import { Item, ItemInfo } from "../models/models.js";
 import { v4 } from 'uuid';
 import path from "path";
@@ -34,8 +33,6 @@ class ItemController {
 
          if (!items) return res.status(404).send();
 
-
-
          return res.json({
             data: items
          })
@@ -59,6 +56,28 @@ class ItemController {
 
          return res.json({
             data: item
+         })
+
+      } catch (err) {
+         return res.status(500).json({
+            error: err
+         })
+      }
+   }
+
+   getTrands = async (req, res) => {
+      try {
+         const items = await Item.findAll({
+            order: [
+               ['rating', "DESC"]
+            ],
+            limit: 6
+         });
+
+         if (!items) return res.status(500).send();
+
+         return res.json({
+            data: items
          })
 
       } catch (err) {
