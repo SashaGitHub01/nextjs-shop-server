@@ -1,12 +1,15 @@
 import jwt from "jsonwebtoken";
-import { Cart, CartItem, User } from "../models/models.js";
+import { Cart, CartItem, Item, User } from "../models/models.js";
 
 class CartController {
    getCartItems = async (req, res) => {
       try {
          const user = req.user;
          const cart = await Cart.findOne({ where: { userId: user.id } });
-         const cartItems = await CartItem.findAll({ where: { cartId: cart.id } });
+         const cartItems = await CartItem.findAll({
+            where: { cartId: cart.id },
+            include: Item
+         });
 
          if (!cart) return res.status(400).send();
 
@@ -23,7 +26,7 @@ class CartController {
 
    addCartItem = async (req, res) => {
       try {
-         const item = req.body.item;
+         const item = req.params.id;
          const userId = req.user.id;
 
          if (!item) return res.status(400).send();
